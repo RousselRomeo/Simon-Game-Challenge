@@ -8,7 +8,7 @@ var started = false;
 var level = 0;
 
 //nextSequence is called once when key is pressed at the start of the game
-$(document).touchstart(function() {
+$(document).on("touchstart",function() {
   if (!started) {
     $("#level-title").text("Level " + level);
     nextSequence();
