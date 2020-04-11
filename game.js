@@ -16,6 +16,14 @@ $(document).on("touchstart",function() {
   }
 });
 
+$(document).on("keydown",function() {
+  if (!started) {
+    $("#level-title").text("Level " + level);
+    nextSequence();
+    started = true;
+  }
+})
+
 //users choses  colour which are stored in userClickedPattern
 $(".btn").click(function() {
 
