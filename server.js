@@ -7,46 +7,57 @@ app.use(bodyParser.urlencoded({
   extended:true
 }))
 
-
+app.use(express.static('public'))
 
 
 
 mongoose.connect("mongodb://localhost:27017/userDB",{ useNewUrlParser: true })
 
 const userSchema = new mongoose.Schema({
-  name:String,
-  password:Number
+  name:{
+    type:String,
+    required:[true,"please specify name a name in the name field"]
+  },
+  password:{
+    type:String,
+    required:[true,"please specify a password in the password field"]
+  }
 })
 
 const User= mongoose.model("User",userSchema);
 
 
-app.use(express.static('public'))
+
 
 
 app.get("/",function(req,res){
-  res.sendFile(__dirname + "/public/register.html")
+  res.sendFile(__dirname + "/public/registerlogin.html")
 
+})
+app.get("/register",function(req,res){
+  res.sendFile(__dirname+"/public/registerlogin.html")
 })
 
 app.get("/login", function(req,res){
-res.sendFile(__dirname + "/public/login.html")
+res.sendFile(__dirname + "/public/registerlogin.html")
 })
 
 app.post("/register", function(req,res){
+  console.log(req.body.userName)
   const newUser= new User({
-    name:req.body.username,
-    password:req.body.password,
+    name:req.body.userName,
+    password:req.body.password
    
   
   })
-
+    
 
   newUser.save(function(err){
     if(err){
-      console.log(err);
+      console.log(err)
+      res.sendFile(__dirname + "/public/errorregister.html")
     }else{
-      res.sendFile(__dirname + "/public/login.html")
+      res.sendFile(__dirname + "/public/registerlogin.html")
      
     }
   })
@@ -69,8 +80,10 @@ console.log(password)
     if(foundUser){
       console.log(foundUser)
       if(foundUser.password==password){
-        res.sendFile(__dirname+"/public/game.html")
+        res.sendFile(__dirname + "/public/game.html")
       }
+    }else{
+      res.send("please register")
     }
   }
 
