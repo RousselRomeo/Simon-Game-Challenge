@@ -51,13 +51,23 @@ app.post("/register", function(req,res){
   
   })
     
+  User.findOne({name:req.body.userName},function(err,foundUser){
+
+    if(err){
+      console.log(err)
+    }else{
+      if(foundUser){
+        res.send("Username already in use! please change")
+      }
+    }
+  })
 
   newUser.save(function(err){
     if(err){
       console.log(err)
       res.sendFile(__dirname + "/public/errorregister.html")
     }else{
-      res.sendFile(__dirname + "/public/registerlogin.html")
+      res.sendFile(__dirname + "/public/login.html")
      
     }
   })
