@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
   }
 })
 
+
 const User= mongoose.model("User",userSchema);
 
 
@@ -35,7 +36,7 @@ app.get("/",function(req,res){
 
 })
 app.get("/register",function(req,res){
-  res.sendFile(__dirname+"/public/registerlogin.html")
+  res.sendFile(__dirname+"/public/register.html")
 })
 
 app.get("/login", function(req,res){
@@ -50,6 +51,7 @@ app.post("/register", function(req,res){
    
   
   })
+
     
   User.findOne({name:req.body.userName},function(err,foundUser){
 
@@ -57,7 +59,7 @@ app.post("/register", function(req,res){
       console.log(err)
     }else{
       if(foundUser){
-        res.send("Username already in use! please change")
+        res.sendFile(__dirname + "/public/handleerrorregister.html")
       }
     }
   })
@@ -65,7 +67,7 @@ app.post("/register", function(req,res){
   newUser.save(function(err){
     if(err){
       console.log(err)
-      res.sendFile(__dirname + "/public/errorregister.html")
+     
     }else{
       res.sendFile(__dirname + "/public/login.html")
      
@@ -84,22 +86,22 @@ app.post("/login",function(req,res){
 console.log(userName)
 console.log(password)
  User.findOne({name:userName},function(err,foundUser){
-  if(err){
-    console.log(err)
+  if(err){console.log(err)}
+  if(!foundUser){
+    res.sendFile(__dirname + "/public/handleerrorlogin.html")
   }else{
-    if(foundUser){
+    if(foundUser.password===password){
       console.log(foundUser)
-      if(foundUser.password==password){
-        res.sendFile(__dirname + "/public/game.html")
-      }
+        res.sendFile(__dirname + "/public/game.html")  
     }else{
-      res.send("please register")
+      res.sendFile(__dirname + "/public/incorrectpwdlogin.html")
     }
   }
 
  });
 
 });
+
 
 
 

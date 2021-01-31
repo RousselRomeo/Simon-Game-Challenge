@@ -11,7 +11,7 @@
 <body>
       
  <div class="jumbotron centered">
-     <h1 class="display-3"> Test Memory!</h1>
+     <h1 class="display-3"> Test Your Memory!</h1>
         <p class="lead">How far can you memorise!</p>
        <div  class="container">
     
@@ -26,8 +26,8 @@
           <form action="/register"  method="post">
             <div class="form-group">
     
-           <input type="text"  class="form-control" name="userName" placeholder="enter username">
-           <input type="password" class="form-control" name="password"  placeholder="enter password">
+           <input type="email"  class="form-control" name="userName" required minlength="5" maxlength="25" placeholder="username">
+           <input type="password" class="form-control" name="password" required minlength="5" maxlength="25" placeholder="password">
            </div>
            <button class="btn-dark">register</button>
            
@@ -45,8 +45,8 @@
         <div class= "card-body">
             <form action="/login" method="post">
                 <div class="form-group">
-            <input type="name"  class="form-control"  name="userName" placeholder="enter your name">
-            <input type="password" class="form-control"  name="password"  placeholder="enter password">
+            <input type="email" id="email"  class="form-control"  name="userName"  required minlength="5" maxlength="25" placeholder="username">
+            <input type="password" id="password" class="form-control"  name="password"  required minlength="5" maxlength="25" placeholder="password">
              </div>
             <button class="btn-light">login</button>
             </form>
@@ -56,5 +56,21 @@
 </div>
       </div>
  </div>
+ <script  type="text/javascript">
+ 
+    var storedEmailValue = localStorage.getItem("email");
+    var storedPasswordValue = localStorage.getItem("password")
+    console.log(storedEmailValue)
+      document.getElementById("email").value=storedEmailValue;
+      document.getElementById("password").value=storedPasswordValue
+   </script>
+   <script  type="text/javascript">
+    function store(){
+       var inputEmail= document.getElementById("email");
+       var inputPassword= document.getElementById("password");
+       localStorage.setItem("email", inputEmail.value);
+       localStorage.setItem("password", inputPassword.value)
+      }
+  </script>
 </body>
 </html>
