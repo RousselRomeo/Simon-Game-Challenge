@@ -19,6 +19,8 @@
   "homepage": "https://github.com/RousselRomeo/Simon-Game-Challenge#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.11.13"
+    "mongoose": "^5.11.13",
+    "nodemailer": "^6.4.17",
+    "randomstring": "^1.1.5"
   }
 }
