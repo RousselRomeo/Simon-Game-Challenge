@@ -4,6 +4,34 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const randomstring = require("randomstring");
 const nodemailer = require("nodemailer");
+//const flash = require("express-flash");
+const flash = require("connect-flash");
+const session = require("express-session");
+const ejs = require("ejs");
+
+app.set("view engine", "ejs");
+
+app.use(
+  session({
+    secret: "happy dog",
+    saveUninitialized: true,
+    resave: true,
+  })
+);
+
+app.use(flash());
+app.use(function (req, res, next) {
+  res.locals.success_messages = req.flash("success");
+  res.locals.error_messages = req.flash("error");
+  res.locals.incorrect_password = req.flash("incorrectPassword");
+  res.locals.user_isnotavailable = req.flash("error2");
+  res.locals.email_notverified = req.flash("error3");
+  res.locals.email_alreadyverified = req.flash("error4");
+  res.locals.email_successfullyverified = req.flash("success2");
+  res.locals.email_notverified2 = req.flash("error5");
+
+  next();
+});
 
 app.use(
   bodyParser.urlencoded({
@@ -15,7 +43,6 @@ app.use(express.static("public"));
 
 mongoose.connect("mongodb://localhost:27017/userDB", { useNewUrlParser: true });
 
-//userSchema
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -32,18 +59,27 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + "/public/registerlogin.html");
-});
-app.get("/register", function (req, res) {
-  res.sendFile(__dirname + "/public/register.html");
+  res.render("loginregister");
 });
 
-app.get("/login", function (req, res) {
-  res.sendFile(__dirname + "/public/login.html");
-});
-
-app.get("/verify", function (req, res) {
-  res.sendFile(__dirname + "/public/secretToken.html");
+app.get("/verify/:secretToken", function (req, res) {
+  const secretToken = req.params.secretToken;
+  User.findOne({ secretToken: secretToken }, function (err, foundUser) {
+    if (err) {
+      console.log(err);
+    }
+    if (!foundUser) {
+      req.flash("error4", "Email already verified Please! login");
+      res.redirect("/");
+    } else {
+      console.log(foundUser);
+      foundUser.active = true;
+      foundUser.secretToken = "";
+      foundUser.save();
+      req.flash("success2", "Email successfully Verified, You can now login");
+      res.redirect("/");
+    }
+  });
 });
 
 //register user
@@ -58,26 +94,34 @@ app.post("/register", function (req, res) {
   User.findOne({ name: req.body.userName }, function (err, foundUser) {
     if (err) {
       console.log(err);
-    } else {
-      if (foundUser) {
-        res.sendFile(__dirname + "/public/handleerrorregister.html");
-      }
-    }
-  });
-  sendMail(newUser.name, newUser.secretToken);
-  console.log(newUser);
-  newUser.save(function (err) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.sendFile(__dirname + "/public/login.html");
+    } else if (!foundUser) {
+      newUser.save(function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          req.flash(
+            "success",
+            "Registration successful! Please verify your email"
+          );
+          sendMail(newUser.name, newUser.secretToken);
+          res.redirect("/");
+        }
+      });
+    } else if (
+      foundUser.password === req.body.password &&
+      foundUser.active === true
+    ) {
+      req.flash("error2", "username already verified, Please! login");
+      res.redirect("/");
+    } else if (foundUser) {
+      req.flash("error5", "Username not verified! Please verify then login");
+      res.redirect("/");
     }
   });
 });
 
 //user login
 app.post("/login", function (req, res) {
-  console.log(req.body);
   const userName = req.body.userName;
   const password = req.body.password;
 
@@ -86,42 +130,29 @@ app.post("/login", function (req, res) {
       console.log(err);
     }
     if (!foundUser) {
-      res.sendFile(__dirname + "/public/handleerrorlogin.html");
+      req.flash(
+        "error",
+        "No user found with the specified name,Please Register!!"
+      );
+      res.redirect("/");
     } else {
       if (foundUser.active === true) {
         if (foundUser.password === password) {
           res.sendFile(__dirname + "/public/game.html");
         } else {
-          res.sendFile(__dirname + "/public/incorrectpwdlogin.html");
+          req.flash("incorrectPassword", "incorrect password,please Try again");
+          res.redirect("/");
         }
       } else {
-        res.sendFile(__dirname + "/public/secretToken.html");
+        req.flash("error3", "Username not verified! Please verify then login");
+        res.redirect("/");
       }
     }
   });
 });
 
-// verify secret token
-app.post("/verifySecretToken", function (req, res) {
-  const secretToken = req.body.secretToken;
-  User.findOne({ secretToken: secretToken }, function (err, foundUser) {
-    if (err) {
-      console.log(err);
-    }
-    if (!foundUser) {
-      res.send("no user found with the specified token");
-    } else {
-      console.log(foundUser);
-      foundUser.active = true;
-      foundUser.secretToken = "";
-      foundUser.save();
+//send Mail to user
 
-      res.redirect("/login");
-    }
-  });
-});
-
-//send Mail
 const sendMail = function (email, secretToken) {
   const Transport = nodemailer.createTransport({
     service: "Yahoo",
@@ -143,13 +174,13 @@ const sendMail = function (email, secretToken) {
     <br/>
     Thank you for registering!
     <br/><br>
-    please verify your email by typing the following token:
+    Eager to test how far you can memorise!
     <br/>
-    Token:<b>${secretToken}</b>
-    <br/>
-    on the following page:
-    <a href="http://localhost:3000/verify"> verify </a> 
-    Have a pleasant day !`,
+    then click below to verify your account
+    <br/><br>
+      <a href="http://localhost:3000/verify/${secretToken}"> <button style="color:green;font-size:40px;"> verify </button> </a> 
+    <br/><br>
+   Show  <b>Roussel Tchatchou</b> that your are the best !`,
   };
 
   Transport.sendMail(mailOptions, function (error, response) {
