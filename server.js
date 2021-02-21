@@ -11,6 +11,7 @@ const ejs = require("ejs");
 
 app.set("view engine", "ejs");
 
+//Express session middleware
 app.use(
   session({
     secret: "happy dog",
@@ -19,7 +20,10 @@ app.use(
   })
 );
 
+//connect flash middleware
 app.use(flash());
+
+//Global variables
 app.use(function (req, res, next) {
   res.locals.success_messages = req.flash("success");
   res.locals.error_messages = req.flash("error");
@@ -52,6 +56,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "please specify a password in the password field"],
   },
+  playerName: String,
   secretToken: String,
   active: Boolean,
 });
@@ -60,6 +65,10 @@ const User = mongoose.model("User", userSchema);
 
 app.get("/", function (req, res) {
   res.render("loginregister");
+});
+
+app.get("/startGame", function (req, res) {
+  res.sendFile(__dirname + "/public/game.html");
 });
 
 app.get("/verify/:secretToken", function (req, res) {
@@ -82,11 +91,41 @@ app.get("/verify/:secretToken", function (req, res) {
   });
 });
 
+app.get("/logout", function (req, res) {
+  console.log(req.session);
+  req.session.destroy(function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect("/");
+    }
+  });
+});
+
+// register player name
+app.post("/registerPlayerName", function (req, res) {
+  const userId = req.session.userId;
+  console.log(userId);
+  const playerName = req.body.playerName;
+  console.log(playerName);
+  User.findOne({ _id: userId }, function (err, foundUser) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(foundUser);
+      foundUser.playerName = playerName;
+      foundUser.save();
+      res.render("welcomePage", { playerName: foundUser.playerName });
+    }
+  });
+});
+
 //register user
 app.post("/register", function (req, res) {
   const newUser = new User({
     name: req.body.userName,
     password: req.body.password,
+    playerName: "",
     secretToken: randomstring.generate(),
     active: false,
   });
@@ -137,14 +176,19 @@ app.post("/login", function (req, res) {
       res.redirect("/");
     } else {
       if (foundUser.active === true) {
-        if (foundUser.password === password) {
-          res.sendFile(__dirname + "/public/game.html");
+        if (foundUser.password === password && foundUser.playerName === "") {
+          req.session.userId = foundUser._id;
+          res.render("playerName");
+          // res.render("welcomePage", { playerName: foundUser.playerName });
+        } else if (foundUser.password === password) {
+          res.render("welcomePage", { playerName: foundUser.playerName });
         } else {
           req.flash("incorrectPassword", "incorrect password,please Try again");
           res.redirect("/");
         }
       } else {
         req.flash("error3", "Username not verified! Please verify then login");
+
         res.redirect("/");
       }
     }
