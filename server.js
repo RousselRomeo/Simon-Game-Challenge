@@ -57,6 +57,7 @@ const userSchema = new mongoose.Schema({
     required: [true, "please specify a password in the password field"],
   },
   playerName: String,
+  playerhighestLevel: String,
   secretToken: String,
   active: Boolean,
 });
@@ -81,7 +82,7 @@ app.get("/verify/:secretToken", function (req, res) {
       req.flash("error4", "Email already verified Please! login");
       res.redirect("/");
     } else {
-      console.log(foundUser);
+      //console.log(foundUser);
       foundUser.active = true;
       foundUser.secretToken = "";
       foundUser.save();
@@ -92,7 +93,7 @@ app.get("/verify/:secretToken", function (req, res) {
 });
 
 app.get("/logout", function (req, res) {
-  console.log(req.session);
+  //console.log(req.session);
   req.session.destroy(function (err) {
     if (err) {
       console.log(err);
@@ -105,14 +106,14 @@ app.get("/logout", function (req, res) {
 // register player name
 app.post("/registerPlayerName", function (req, res) {
   const userId = req.session.userId;
-  console.log(userId);
+  //console.log(userId);
   const playerName = req.body.playerName;
   console.log(playerName);
   User.findOne({ _id: userId }, function (err, foundUser) {
     if (err) {
       console.log(err);
     } else {
-      console.log(foundUser);
+      //console.log(foundUser);
       foundUser.playerName = playerName;
       foundUser.save();
       res.render("welcomePage", { playerName: foundUser.playerName });
@@ -181,6 +182,7 @@ app.post("/login", function (req, res) {
           res.render("playerName");
           // res.render("welcomePage", { playerName: foundUser.playerName });
         } else if (foundUser.password === password) {
+          req.session.userId = foundUser._id;
           res.render("welcomePage", { playerName: foundUser.playerName });
         } else {
           req.flash("incorrectPassword", "incorrect password,please Try again");
@@ -191,6 +193,23 @@ app.post("/login", function (req, res) {
 
         res.redirect("/");
       }
+    }
+  });
+});
+
+app.post("/storeLevel", function (req, res) {
+  const playerLevel = req.body.playerLevel;
+  const userId = req.session.userId;
+  console.log(userId);
+  console.log(playerLevel);
+  User.findOne({ _id: userId }, function (err, foundUser) {
+    if (err) {
+      console.log(err);
+    } else {
+      //console.log(foundUser);
+      foundUser.playerhighestLevel = playerLevel;
+      foundUser.save();
+      //res.render("welcomePage", { playerName: foundUser.playerName });
     }
   });
 });
@@ -235,6 +254,7 @@ const sendMail = function (email, secretToken) {
     }
   });
 };
+app.post("/test", (req) => console.log("hi", req));
 
 app.listen(3000, function () {
   console.log("server is listenning at port 3000");
