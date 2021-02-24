@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema({
     required: [true, "please specify a password in the password field"],
   },
   playerName: String,
-  playerhighestLevel: String,
+  playerhighestLevel: { type: Number, default: 0 },
   secretToken: String,
   active: Boolean,
 });
@@ -116,7 +116,11 @@ app.post("/registerPlayerName", function (req, res) {
       //console.log(foundUser);
       foundUser.playerName = playerName;
       foundUser.save();
-      res.render("welcomePage", { playerName: foundUser.playerName });
+
+      res.render("welcomePage", {
+        playerName: foundUser.playerName,
+        playerhighestLevel: foundUser.playerhighestLevel,
+      });
     }
   });
 });
@@ -183,7 +187,19 @@ app.post("/login", function (req, res) {
           // res.render("welcomePage", { playerName: foundUser.playerName });
         } else if (foundUser.password === password) {
           req.session.userId = foundUser._id;
-          res.render("welcomePage", { playerName: foundUser.playerName });
+          User.find({})
+            .sort({ playerhighestLevel: "descending" })
+            .exec(function (err, foundUsers) {
+              if (err) {
+                console.log(err);
+              } else {
+                res.render("welcomePage", {
+                  playerName: foundUser.playerName,
+                  playerhighestLevel: foundUser.playerhighestLevel,
+                  foundUsers: foundUsers,
+                });
+              }
+            });
         } else {
           req.flash("incorrectPassword", "incorrect password,please Try again");
           res.redirect("/");
@@ -207,9 +223,11 @@ app.post("/storeLevel", function (req, res) {
       console.log(err);
     } else {
       //console.log(foundUser);
-      foundUser.playerhighestLevel = playerLevel;
-      foundUser.save();
-      //res.render("welcomePage", { playerName: foundUser.playerName });
+      if (foundUser.playerhighestLevel < playerLevel) {
+        foundUser.playerhighestLevel = playerLevel;
+        foundUser.save();
+      } else {
+      }
     }
   });
 });
@@ -237,7 +255,7 @@ const sendMail = function (email, secretToken) {
     <br/>
     Thank you for registering!
     <br/><br>
-    Eager to test how far you can memorise!
+    Eager to test how far you can memorise! and compete with friends!
     <br/>
     then click below to verify your account
     <br/><br>

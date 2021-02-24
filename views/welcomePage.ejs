@@ -1,10 +1,18 @@
 <%- include("partials/header"); -%>
 <div class="jumbotron centered">
-  <h1>Welcome</h1>
-  <h1><%=playerName%></h1>
+  <h1>Welcome <%=playerName%>!</h1>
+  <h1>Highest Level: <%= playerhighestLevel%></h1>
   <form action="/startGame" method="get">
     <button type="submit">start game</button>
   </form>
+</div>
+
+<div class="ranking">
+  <ol>
+    <% foundUsers.forEach(function(foundUser){ %>
+    <li><%= foundUser.playerName %></li>
+    <%})%>
+  </ol>
 </div>
 
 <%- include("partials/footer"); -%>
