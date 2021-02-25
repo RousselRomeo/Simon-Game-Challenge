@@ -65,7 +65,19 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 app.get("/", function (req, res) {
-  res.render("loginregister");
+  User.find({})
+    .limit(10)
+    .sort({ playerhighestLevel: "descending" })
+    .exec(function (err, foundUsers) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.render("loginregister", {
+          foundUsers: foundUsers,
+        });
+      }
+    });
+  //res.render("loginregister");
 });
 
 app.get("/startGame", function (req, res) {
@@ -188,6 +200,7 @@ app.post("/login", function (req, res) {
         } else if (foundUser.password === password) {
           req.session.userId = foundUser._id;
           User.find({})
+            .limit(10)
             .sort({ playerhighestLevel: "descending" })
             .exec(function (err, foundUsers) {
               if (err) {

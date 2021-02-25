@@ -115,6 +115,33 @@
       localStorage.setItem("registrationPassword", inputPassword.value);
     }
   </script>
-
-  <%- include("partials/footer"); -%>
 </div>
+
+<div class="container">
+  <header>
+    <h1>Best Players</h1>
+  </header>
+  <div class="wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Highest Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
+
+        <tr>
+          <td class="rank"><%= num++ %></td>
+          <td class="team"><%= foundUser.playerName %></td>
+          <td class="points"><%= foundUser.playerhighestLevel %></td>
+        </tr>
+        <%})%>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include("partials/footer"); -%>
