@@ -1,0 +1,68 @@
+<%- include("partials/header"); -%>
+<div class="jumbotron centered">
+  <P style="color: red"><%= locals.email_alreadyverified %> </P>
+  <P style="color: red"><%= locals.email_successfullyverified %> </P>
+  <div class="container">
+    <div class="row" style="margin-left: 100px">
+      <div class="col-sm-8">
+        <div class="card">
+          <div class="card-body">
+            <P style="color: red"><%= locals.success_messages %> </P>
+            <P style="color: red"><%= locals.user_isnotavailable %> </P>
+            <P style="color: red"><%= email_notverified2 %> </P>
+
+            <form action="/register" method="post">
+              <div class="form-group">
+                <input
+                  type="email"
+                  id="registrationEmail"
+                  class="form-control"
+                  name="userName"
+                  required
+                  minlength="5"
+                  maxlength="25"
+                  placeholder="username"
+                />
+                <input
+                  type="password"
+                  id="registrationPassword"
+                  class="form-control"
+                  name="password"
+                  required
+                  minlength="5"
+                  maxlength="25"
+                  placeholder="password"
+                />
+              </div>
+              <button onclick="storeRegistration()" class="btn-dark">
+                register
+              </button>
+              <a
+                style="margin-left: 40px"
+                href="http://localhost:3000"
+                class="btn-light"
+                >Back to login</a
+              >
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include("partials/footer"); -%>
+  </div>
+</div>
+<script type="text/javascript">
+  function storeRegistration() {
+    var inputEmail = document.getElementById("registrationEmail");
+    var inputPassword = document.getElementById("registrationPassword");
+    localStorage.setItem("registrationEmail", inputEmail.value);
+    localStorage.setItem("registrationPassword", inputPassword.value);
+  }
+</script>
+<script type="text/javascript">
+  var storedEmailValue = localStorage.getItem("registrationEmail");
+  var storedPasswordValue = localStorage.getItem("registrationPassword");
+
+  document.getElementById("registrationEmail").value = storedEmailValue;
+  document.getElementById("registrationPassword").value = storedPasswordValue;
+</script>

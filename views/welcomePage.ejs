@@ -1,21 +1,31 @@
 <%- include("partials/header"); -%>
-<div class="jumbotron centered">
+<div
+  class="jumbotron centered"
+  style="padding-bottom: 5px; margin-bottom: 10px; padding-top: 20px"
+>
   <h1>Welcome <%=playerName%>!</h1>
   <h1>Your Highest Level: <%= playerhighestLevel%></h1>
   <form action="/startGame" method="get">
-    <button style=" height: 72px;
-    width: 134px;
-    border-top-width: 0px;
-    border-bottom-width: 0px;
-    border-left-width: 0px;
-    border-right-width: 0px;" class="btn btn-primary" type="submit">start game</button>
+    <button
+      style="
+        height: 72px;
+        width: 134px;
+        border-top-width: 0px;
+        border-bottom-width: 0px;
+        border-left-width: 0px;
+        border-right-width: 0px;
+      "
+      class="btn btn-primary"
+      type="submit"
+    >
+      start game
+    </button>
   </form>
 </div>
 
-
 <div class="container">
   <header>
-    <h1> Best Players</h1>
+    <h1>Best Players</h1>
   </header>
   <div class="wrapper">
     <table>
@@ -24,26 +34,20 @@
           <th>Rank</th>
           <th>Name</th>
           <th>Highest Level</th>
-        
         </tr>
       </thead>
       <tbody>
-        <% var num=1 %>
-        <% foundUsers.forEach(function(foundUser){ %>
-         
-          
-           
+        <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
+
         <tr>
           <td class="rank"><%= num++ %></td>
-          <td class="team"> <%= foundUser.playerName %></td>
+          <td class="team"><%= foundUser.playerName %></td>
           <td class="points"><%= foundUser.playerhighestLevel %></td>
-       
         </tr>
         <%})%>
       </tbody>
     </table>
   </div>
-</div>
 </div>
 
 <%- include("partials/footer"); -%>

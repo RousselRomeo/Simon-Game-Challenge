@@ -1,0 +1,102 @@
+<%- include("partials/header"); -%>
+<div
+  class="jumbotron centered"
+  style="margin-bottom: 10px; padding-top: 20px; padding-bottom: 5px"
+>
+  <h1
+    class="display-3"
+    style="margin-bottom: 50px; font-weight: 600; font-size: 3em"
+  >
+    How far can you memorise!
+  </h1>
+
+  <div class="container">
+    <div class="row" style="margin-left: 70px">
+      <div class="col-sm-8">
+        <div class="card">
+          <div class="card-body">
+            <P style="color: red"> <%= locals.email_notverified %> </P>
+            <P style="color: red"> <%= locals.error_messages %> </P>
+            <P style="color: red"> <%= locals.incorrect_password %> </P>
+
+            <form action="/login" method="post">
+              <div class="form-group">
+                <input
+                  type="email"
+                  id="email"
+                  class="form-control"
+                  name="userName"
+                  required
+                  minlength="5"
+                  maxlength="25"
+                  placeholder="username"
+                />
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  name="password"
+                  required
+                  minlength="5"
+                  maxlength="25"
+                  placeholder="password"
+                />
+              </div>
+              <button onclick="store()" class="btn-light">login</button>
+              <a
+                style="margin-left: 40px"
+                href="http://localhost:3000/register"
+                class="btn-light"
+                >register</a
+              >
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  var storedEmailValue = localStorage.getItem("email");
+  var storedPasswordValue = localStorage.getItem("password");
+  console.log(storedEmailValue);
+  document.getElementById("email").value = storedEmailValue;
+  document.getElementById("password").value = storedPasswordValue;
+</script>
+<script type="text/javascript">
+  function store() {
+    var inputEmail = document.getElementById("email");
+    var inputPassword = document.getElementById("password");
+    localStorage.setItem("email", inputEmail.value);
+    localStorage.setItem("password", inputPassword.value);
+  }
+</script>
+
+<div class="container">
+  <header>
+    <h1>Best Players</h1>
+  </header>
+  <div class="wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Highest Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
+
+        <tr>
+          <td class="rank"><%= num++ %></td>
+          <td class="team"><%= foundUser.playerName %></td>
+          <td class="points"><%= foundUser.playerhighestLevel %></td>
+        </tr>
+        <%})%>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include("partials/footer"); -%>

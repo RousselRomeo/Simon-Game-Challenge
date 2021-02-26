@@ -72,12 +72,16 @@ app.get("/", function (req, res) {
       if (err) {
         console.log(err);
       } else {
-        res.render("loginregister", {
+        res.render("login", {
           foundUsers: foundUsers,
         });
       }
     });
   //res.render("loginregister");
+});
+
+app.get("/register", function (req, res) {
+  res.render("register");
 });
 
 app.get("/startGame", function (req, res) {
@@ -92,14 +96,14 @@ app.get("/verify/:secretToken", function (req, res) {
     }
     if (!foundUser) {
       req.flash("error4", "Email already verified Please! login");
-      res.redirect("/");
+      res.redirect("/register");
     } else {
       //console.log(foundUser);
       foundUser.active = true;
       foundUser.secretToken = "";
       foundUser.save();
       req.flash("success2", "Email successfully Verified, You can now login");
-      res.redirect("/");
+      res.redirect("/register");
     }
   });
 });
@@ -125,14 +129,30 @@ app.post("/registerPlayerName", function (req, res) {
     if (err) {
       console.log(err);
     } else {
+      User.find({})
+        .limit(10)
+        .sort({ playerhighestLevel: "descending" })
+        .exec(function (err, foundUsers) {
+          if (err) {
+            console.log(err);
+          } else {
+            foundUser.playerName = playerName;
+            foundUser.save();
+            res.render("welcomePage", {
+              playerName: foundUser.playerName,
+              playerhighestLevel: foundUser.playerhighestLevel,
+              foundUsers: foundUsers,
+            });
+          }
+        });
       //console.log(foundUser);
-      foundUser.playerName = playerName;
-      foundUser.save();
+      // foundUser.playerName = playerName;
+      //foundUser.save();
 
-      res.render("welcomePage", {
+      /* res.render("welcomePage", {
         playerName: foundUser.playerName,
         playerhighestLevel: foundUser.playerhighestLevel,
-      });
+      });*/
     }
   });
 });
@@ -160,7 +180,7 @@ app.post("/register", function (req, res) {
             "Registration successful! Please verify your email"
           );
           sendMail(newUser.name, newUser.secretToken);
-          res.redirect("/");
+          res.redirect("register");
         }
       });
     } else if (
@@ -168,10 +188,10 @@ app.post("/register", function (req, res) {
       foundUser.active === true
     ) {
       req.flash("error2", "username already verified, Please! login");
-      res.redirect("/");
+      res.redirect("/register");
     } else if (foundUser) {
       req.flash("error5", "Username not verified! Please verify then login");
-      res.redirect("/");
+      res.redirect("/register");
     }
   });
 });
