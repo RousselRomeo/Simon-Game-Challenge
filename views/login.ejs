@@ -87,13 +87,13 @@
       </thead>
       <tbody>
         <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
-
+        <%if(foundUser.playerName !== "" ){ %>
         <tr>
           <td class="rank"><%= num++ %></td>
           <td class="team"><%= foundUser.playerName %></td>
           <td class="points"><%= foundUser.playerhighestLevel %></td>
         </tr>
-        <%})%>
+        <%}%> <%})%>
       </tbody>
     </table>
   </div>
