@@ -45,7 +45,10 @@ app.use(
 
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/userDB", { useNewUrlParser: true });
+mongoose.connect(
+  "mongodb+srv://romeo:tchatchou111@cluster0.mxzx2.mongodb.net/userDB",
+  { useNewUrlParser: true }
+);
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -307,6 +310,6 @@ const sendMail = function (email, secretToken) {
 };
 app.post("/test", (req) => console.log("hi", req));
 
-app.listen(3000, function () {
+app.listen(process.env.PORT || 3000, function () {
   console.log("server is listenning at port 3000");
 });

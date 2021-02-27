@@ -3,8 +3,15 @@
   class="jumbotron centered"
   style="padding-bottom: 5px; margin-bottom: 10px; padding-top: 20px"
 >
-  <h1>Welcome <%=playerName%>!</h1>
-  <h1>Your Highest Level: <%= playerhighestLevel%></h1>
+  <h1>
+    Welcome <span style="color: red; font-weight: bold"><%=playerName%>!</span>
+  </h1>
+  <h1>
+    Your Highest Level:<span style="color: red; font-weight: bold">
+      <%= playerhighestLevel%>
+    </span>
+  </h1>
+
   <form action="/startGame" method="get">
     <button
       style="
@@ -39,7 +46,7 @@
 
       <tbody>
         <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
-        <%if(foundUser.name !== ""){ %>
+        <%if(foundUser.playerName !== ""){ %>
         <tr>
           <td class="rank"><%= num++ %></td>
           <td class="team"><%= foundUser.playerName %></td>
