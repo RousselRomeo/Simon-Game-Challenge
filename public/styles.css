@@ -56,18 +56,6 @@ body {
   color: #989c9b;
 }
 
-.container > header {
-  margin: 0 auto;
-  padding: 1em;
-  text-align: center;
-}
-
-.container > header h1 {
-  font-weight: 600;
-  font-size: 3em;
-  margin: 0;
-}
-
 .wrapper {
   line-height: 1.5em;
   margin: 0 auto;

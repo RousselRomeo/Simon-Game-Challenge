@@ -1,60 +1,64 @@
 <%- include("partials/header"); -%>
-<div
-  class="jumbotron centered"
-  style="padding-bottom: 5px; margin-bottom: 10px; padding-top: 20px"
->
-  <h1>
-    Welcome <span style="color: red; font-weight: bold"><%=playerName%>!</span>
-  </h1>
-  <h1>
-    Your Highest Level:<span style="color: red; font-weight: bold">
-      <%= playerhighestLevel%>
-    </span>
-  </h1>
 
-  <form action="/startGame" method="get">
-    <button
-      style="
-        height: 72px;
-        width: 134px;
-        border-top-width: 0px;
-        border-bottom-width: 0px;
-        border-left-width: 0px;
-        border-right-width: 0px;
-      "
-      class="btn btn-primary"
-      type="submit"
-    >
-      start game
-    </button>
-  </form>
+<h1 style="margin-top: 50px">
+  Welcome <span style="color: red; font-weight: bold"><%=playerName%>!</span>
+</h1>
+<h1>
+  Highest Level:<span style="color: red; font-weight: bold">
+    <%= playerhighestLevel%>
+  </span>
+</h1>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-5 col-md-10 col-lg-12">
+      <form action="/startGame" method="get">
+        <button
+          style="
+            height: 72px;
+            width: 134px;
+            border-top-width: 0px;
+            border-bottom-width: 0px;
+            border-left-width: 0px;
+            border-right-width: 0px;
+          "
+          class="btn btn-primary"
+          type="submit"
+        >
+          start game
+        </button>
+      </form>
+    </div>
+  </div>
 </div>
 
-<div class="container">
-  <header>
-    <h1>Best Players</h1>
-  </header>
-  <div class="wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Name</th>
-          <th>Highest Level</th>
-        </tr>
-      </thead>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-5 col-md-10 col-lg-12">
+      <header>
+        <h1 style="margin-top: 30px">Best Players</h1>
+      </header>
 
-      <tbody>
-        <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
-        <%if(foundUser.playerName !== ""){ %>
-        <tr>
-          <td class="rank"><%= num++ %></td>
-          <td class="team"><%= foundUser.playerName %></td>
-          <td class="points"><%= foundUser.playerhighestLevel %></td>
-        </tr>
-        <%}%> <%})%>
-      </tbody>
-    </table>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Highest Level</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
+          <%if(foundUser.playerName !== ""){ %>
+          <tr>
+            <td class="rank"><%= num++ %></td>
+            <td class="team"><%= foundUser.playerName %></td>
+            <td class="points"><%= foundUser.playerhighestLevel %></td>
+          </tr>
+          <%}%> <%})%>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
