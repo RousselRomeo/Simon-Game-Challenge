@@ -297,7 +297,7 @@ const sendMail = function (email, secretToken) {
     <br/>
     then click below to verify your account
     <br/><br>
-      <a href="http://localhost:3000/verify/${secretToken}"> <button style="color:green;font-size:40px;"> verify </button> </a> 
+      <a href="https://afternoon-retreat-41766.herokuapp.com/verify/${secretToken}"> <button style="color:green;font-size:40px;"> verify </button> </a> 
     <br/><br>
    Show  <b>Roussel Tchatchou</b> that your are the best !`,
   };
