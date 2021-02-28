@@ -44,10 +44,11 @@ app.use(
 );
 
 app.use(express.static("public"));
+//"mongodb://localhost:27017/userDB"
 
 mongoose.connect(
   "mongodb+srv://romeo:tchatchou111@cluster0.mxzx2.mongodb.net/userDB",
-  { useNewUrlParser: true }
+  { useNewUrlParser: true, useUnifiedTopology: true }
 );
 
 const userSchema = new mongoose.Schema({
@@ -250,7 +251,8 @@ app.post("/login", function (req, res) {
 });
 
 app.post("/storeLevel", function (req, res) {
-  const playerLevel = req.body.playerLevel;
+  const { playerLevel } = JSON.parse(req.body.jsonStringPlayerLevel);
+
   const userId = req.session.userId;
   console.log(userId);
   console.log(playerLevel);
@@ -308,7 +310,6 @@ const sendMail = function (email, secretToken) {
     }
   });
 };
-app.post("/test", (req) => console.log("hi", req));
 
 app.listen(process.env.PORT || 3000, function () {
   console.log("server is listenning at port 3000");

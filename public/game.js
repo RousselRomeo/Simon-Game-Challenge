@@ -50,7 +50,14 @@ function checkAnswer(currentLevel) {
       $("body").removeClass("game-over");
     }, 200);
 
-    $.post("http://localhost:3000/storeLevel", { playerLevel: level });
+    $.post("https://afternoon-retreat-41766.herokuapp.com/storeLevel", {
+      jsonStringPlayerLevel: JSON.stringify({
+        playerLevel: level,
+      }),
+      function(data, status) {
+        console.log(data);
+      },
+    });
 
     startOver();
   }
