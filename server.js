@@ -161,7 +161,7 @@ app.post("/registerPlayerName", function (req, res) {
   });
 });
 
-//register user
+//Register user
 app.post("/register", function (req, res) {
   const newUser = new User({
     name: req.body.userName,
