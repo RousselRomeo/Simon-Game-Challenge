@@ -43,21 +43,12 @@ function checkAnswer(currentLevel) {
     }
   } else {
     playSound("wrong");
-    $("body").addClass("game-over");
+    $("#level-title").addClass("game-over");
     $("#level-title").text("Game Over, Press screen  or key to Restart");
 
     setTimeout(function () {
-      $("body").removeClass("game-over");
+      $("#level-title").removeClass("game-over");
     }, 200);
-
-    $.post("https://afternoon-retreat-41766.herokuapp.com/storeLevel", {
-      jsonStringPlayerLevel: JSON.stringify({
-        playerLevel: level,
-      }),
-      function(data, status) {
-        console.log(data);
-      },
-    });
 
     startOver();
   }
@@ -94,6 +85,16 @@ function playSound(name) {
 
 // starts over the game
 function startOver() {
+  //"http://localhost:3000/storeLevel";
+
+  $.post("https://afternoon-retreat-41766.herokuapp.com/storeLevel", {
+    jsonStringPlayerLevel: JSON.stringify({
+      playerLevel: level,
+    }),
+    function(data, status) {
+      console.log(data);
+    },
+  });
   level = 0;
   gamePattern = [];
   started = false;
