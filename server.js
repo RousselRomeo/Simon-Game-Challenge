@@ -44,12 +44,15 @@ app.use(
 );
 
 app.use(express.static("public"));
+//"mongodb://localhost:27017/userDB"
 
-//"mongodb+srv://romeo:tchatchou111@cluster0.mxzx2.mongodb.net/userDB"
-mongoose.connect("mongodb://localhost:27017/userDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  "mongodb+srv://romeo:tchatchou111@cluster0.mxzx2.mongodb.net/userDB",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 const userSchema = new mongoose.Schema({
   name: {
