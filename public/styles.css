@@ -1,6 +1,7 @@
 body {
   text-align: center;
   background-color: #011f3f;
+  -webkit-appearance: none;
 }
 
 #level-title {
@@ -8,12 +9,14 @@ body {
   font-size: 3rem;
   margin: 5%;
   color: #fef2bf;
+  -webkit-appearance: none;
 }
 
 .container {
   display: block;
   width: 50%;
   margin: auto;
+  -webkit-appearance: none;
 }
 
 .btn {
@@ -23,32 +26,39 @@ body {
   width: 200px;
   border: 10px solid black;
   border-radius: 20%;
+  -webkit-appearance: none;
 }
 
 .game-over {
   background-color: red;
   opacity: 0.8;
+  -webkit-appearance: none;
 }
 
 .red {
   background-color: red;
+  -webkit-appearance: none;
 }
 
 .green {
   background-color: green;
+  -webkit-appearance: none;
 }
 
 .blue {
   background-color: blue;
+  -webkit-appearance: none;
 }
 
 .yellow {
   background-color: yellow;
+  -webkit-appearance: none;
 }
 
 .pressed {
   box-shadow: 0 0 20px white;
   background-color: grey;
+  -webkit-appearance: none;
 }
 
 .bodyl {
@@ -69,6 +79,7 @@ table {
   border-collapse: collapse;
   width: 100%;
   background: #fff;
+  -webkit-appearance: none;
 }
 
 th {
@@ -76,6 +87,7 @@ th {
   font-weight: bold;
   color: #fff;
   white-space: nowrap;
+  -webkit-appearance: none;
 }
 
 td,
