@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -47,7 +48,7 @@ app.use(express.static("public"));
 //"mongodb://localhost:27017/userDB"
 
 mongoose.connect(
-  "mongodb+srv://romeo:tchatchou111@cluster0.mxzx2.mongodb.net/userDB",
+  "mongodb+srv://procees.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/userDB",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -85,10 +86,6 @@ app.get("/", function (req, res) {
       }
     });
   //res.render("loginregister");
-});
-
-app.get("/register", function (req, res) {
-  res.render("register");
 });
 
 app.get("/startGame", function (req, res) {
@@ -165,43 +162,48 @@ app.post("/registerPlayerName", function (req, res) {
 });
 
 //Register user
-app.post("/register", function (req, res) {
-  const newUser = new User({
-    name: req.body.userName,
-    password: req.body.password,
-    playerName: "",
-    secretToken: randomstring.generate(),
-    active: false,
-  });
 
-  User.findOne({ name: req.body.userName }, function (err, foundUser) {
-    if (err) {
-      console.log(err);
-    } else if (!foundUser) {
-      newUser.save(function (err) {
-        if (err) {
-          console.log(err);
-        } else {
-          req.flash(
-            "success",
-            "Registration successful! Please verify your email"
-          );
-          sendMail(newUser.name, newUser.secretToken);
-          res.redirect("register");
-        }
-      });
-    } else if (
-      foundUser.password === req.body.password &&
-      foundUser.active === true
-    ) {
-      req.flash("error2", "username already verified, Please! login");
-      res.redirect("/register");
-    } else if (foundUser) {
-      req.flash("error5", "Username not verified! Please verify then login");
-      res.redirect("/register");
-    }
+app
+  .get("/register", function (req, res) {
+    res.render("register");
+  })
+  .post("/register", function (req, res) {
+    const newUser = new User({
+      name: req.body.userName,
+      password: req.body.password,
+      playerName: "",
+      secretToken: randomstring.generate(),
+      active: false,
+    });
+
+    User.findOne({ name: req.body.userName }, function (err, foundUser) {
+      if (err) {
+        console.log(err);
+      } else if (!foundUser) {
+        newUser.save(function (err) {
+          if (err) {
+            console.log(err);
+          } else {
+            req.flash(
+              "success",
+              "Registration successful! Please verify your email"
+            );
+            sendMail(newUser.name, newUser.secretToken);
+            res.redirect("register");
+          }
+        });
+      } else if (
+        foundUser.password === req.body.password &&
+        foundUser.active === true
+      ) {
+        req.flash("error2", "username already verified, Please! login");
+        res.redirect("/register");
+      } else if (foundUser) {
+        req.flash("error5", "Username not verified! Please verify then login");
+        res.redirect("/register");
+      }
+    });
   });
-});
 
 //user login
 app.post("/login", function (req, res) {
