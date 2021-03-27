@@ -9,6 +9,7 @@ const nodemailer = require("nodemailer");
 const flash = require("connect-flash");
 const session = require("express-session");
 const ejs = require("ejs");
+const fs = require("fs");
 
 app.set("view engine", "ejs");
 
@@ -45,10 +46,11 @@ app.use(
 );
 
 app.use(express.static("public"));
-//"mongodb://localhost:27017/userDB"
+//"mongodb+srv://procees.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/userDB"
 
+//"mongodb://localhost:27017/userDB"
 mongoose.connect(
-  "mongodb+srv://procees.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/userDB",
+  "mongodb+srv://process.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/userDB",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -71,6 +73,43 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model("User", userSchema);
+
+app.get("/video", function (req, res) {
+  const range = req.headers.range;
+  const videoPath = __dirname + "/lascars.mp4";
+  const videoSize = fs.statSync(videoPath).size;
+  console.log(range);
+  console.log(videoSize);
+
+  const chunkSize = 10 ** 6;
+
+  //replace: replaces all letters in range with an empty string
+  const start = Number(range.replace(/\D/g, ""));
+  console.log(start);
+  const end = Math.min(start + chunkSize, videoSize - 1);
+
+  console.log(end);
+  const contentLength = end - start + 1;
+  console.log(contentLength);
+  const headers = {
+    "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+    "Accept-Ranges": "bytes",
+    "Content-Length": contentLength,
+    "Content-Type": "video/mp4",
+  };
+
+  //206:we are sending partial content
+  res.writeHead(206, headers);
+
+  const stream = fs.createReadStream(videoPath, { start, end });
+
+  stream.pipe(res);
+
+  /*console.log(req.headers);
+  res.writeHead(200, { "Content-Type": "video/mp4" });
+  var myReadStream = fs.createReadStream(__dirname + "/danceUB.mp4");
+  myReadStream.pipe(res);*/
+});
 
 app.get("/", function (req, res) {
   User.find({})
