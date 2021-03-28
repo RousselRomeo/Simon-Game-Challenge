@@ -48,7 +48,6 @@ app.use(
 app.use(express.static("public"));
 //"mongodb+srv://procees.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/userDB"
 
-//"mongodb://localhost:27017/userDB"
 mongoose.connect(
   "mongodb+srv://roussel:tchatchou3991@cluster0.mxzx2.mongodb.net/userDB",
   {
@@ -74,7 +73,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-app.get("/video", function (req, res) {
+/*app.get("/video", function (req, res) {
   const range = req.headers.range;
   const videoPath = __dirname + "/lascars.mp4";
   const videoSize = fs.statSync(videoPath).size;
@@ -108,8 +107,8 @@ app.get("/video", function (req, res) {
   /*console.log(req.headers);
   res.writeHead(200, { "Content-Type": "video/mp4" });
   var myReadStream = fs.createReadStream(__dirname + "/danceUB.mp4");
-  myReadStream.pipe(res);*/
-});
+  myReadStream.pipe(res);/
+});*/
 
 app.get("/", function (req, res) {
   User.find({})
