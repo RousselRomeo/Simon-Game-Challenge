@@ -50,7 +50,7 @@ app.use(express.static("public"));
 
 //"mongodb://localhost:27017/userDB"
 mongoose.connect(
-  "mongodb+srv://romeo:tchatchou111@cluster0.mxzx2.mongodb.net/userDB",
+  "mongodb+srv://roussel:tchatchou3991@cluster0.mxzx2.mongodb.net/userDB",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
