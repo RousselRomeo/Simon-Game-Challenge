@@ -47,7 +47,7 @@ app.use(
 
 app.use(express.static("public"));
 //"mongodb+srv://procees.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/userDB"
-
+//"mongodb://localhost:27017/userDB"
 mongoose.connect(
   "mongodb+srv://roussel:tchatchou3991@cluster0.mxzx2.mongodb.net/userDB",
   {
