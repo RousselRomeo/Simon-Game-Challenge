@@ -114,7 +114,7 @@ const User = mongoose.model("User", userSchema);
 
 app.get("/", function (req, res) {
   User.find({})
-    .limit(10)
+    .limit(20)
     .sort({ playerhighestLevel: "descending" })
     .exec(function (err, foundUsers) {
       if (err) {
