@@ -1,3 +1,5 @@
+"use strict";
+
 require("dotenv").config();
 const express = require("express");
 const app = express();
@@ -172,7 +174,7 @@ app.post("/registerPlayerName", function (req, res) {
       console.log(err);
     } else {
       User.find({})
-        .limit(10)
+        .limit(20)
         .sort({ playerhighestLevel: "descending" })
         .exec(function (err, foundUsers) {
           if (err) {
