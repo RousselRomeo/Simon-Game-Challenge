@@ -357,5 +357,7 @@ const sendMail = function (email, secretToken) {
 };
 
 app.listen(process.env.PORT || 3000, function () {
+
   console.log("server is listenning at port 3000");
+  
 });
